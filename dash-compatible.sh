@@ -111,8 +111,6 @@ alias d='sudo docker'
 alias e='unar'
 
 f() {
-    f_local_i
-	f_expect_find=
 	if ! [ -t 0 ]; then
 		file -
 	elif [ -z "$1" ]; then
