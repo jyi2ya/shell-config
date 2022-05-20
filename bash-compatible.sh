@@ -46,9 +46,9 @@ _prompt_slow_command_set_tracer()
 _prompt_slow_command()
 {
     local time_diff=$((SECONDS - CMD_START_TIME))
-    local active_window=$(xdotool getactivewindow)
     [ $time_diff -lt 10  ] && return
     if [ -n "$DISPLAY" ]; then
+        local active_window=$(xdotool getactivewindow)
         if [ "$time_diff" -gt 30 ] && [ "$active_window" != "$CMD_ACTIVE_WINDOW" ]; then
             notify-send DONE "$CMD_COMMAND"
         fi
