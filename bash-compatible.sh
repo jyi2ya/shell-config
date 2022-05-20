@@ -28,9 +28,45 @@ _prompt_smart_ls()
 	fi
 }
 
-PROMPT_COMMAND='_prompt_smart_ls'
+_prompt_slow_command_tracer_init()
+{
+    CMD_START_TIME="$SECONDS"
+    CMD_COMMAND="$BASH_COMMAND"
+    if [ -n "$DISPLAY" ]; then
+        CMD_ACTIVE_WINDOW=$(xdotool getactivewindow)
+    fi
+    trap '' DEBUG
+}
 
-PS1='$(_prompt_return_value)\A \H$(__git_ps1) $(_prompt_fish_path)\n\j '
+_prompt_slow_command_set_tracer()
+{
+    trap _prompt_slow_command_tracer_init DEBUG
+}
+
+_prompt_slow_command()
+{
+    local time_diff=$((SECONDS - CMD_START_TIME))
+    local active_window=$(xdotool getactivewindow)
+    [ $time_diff -lt 10  ] && return
+    if [ -n "$DISPLAY" ]; then
+        if [ "$time_diff" -gt 30 ] && [ "$active_window" != "$CMD_ACTIVE_WINDOW" ]; then
+            notify-send DONE "$CMD_COMMAND"
+        fi
+    fi
+    echo -n ">"
+    date -u +%H:%M:%S --date="@$time_diff" | awk -F':' '{
+    if ($1) printf("%dh ", $1);
+    if ($1 || $2) printf("%dm ", $2);
+    printf("%ds", $3);
+}'
+    echo -n "< "
+    return
+}
+
+PROMPT_COMMAND='_prompt_smart_ls; (_z --add "$(command pwd -P 2>/dev/null)" 2>/dev/null &); _prompt_slow_command_set_tracer'
+_Z_NO_PROMPT_COMMAND=true
+
+PS1='$(_prompt_return_value)$(_prompt_slow_command)\A \H$(__git_ps1) $(_prompt_fish_path)\n\j '
 
 if [ -f /etc/bash_completion ]; then
     # shellcheck source=/dev/null
