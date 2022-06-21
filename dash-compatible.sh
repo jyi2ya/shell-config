@@ -54,10 +54,13 @@ alias rc='rustc'
 
 rr() {
 	[ -z "$@" ] && return
-	rr_fname="/tmp/rust_run_$RANDOM.bin"
-	rustc "$@" -o "$rr_fname" || return
-	eval "$rr_fname"
-	rm -f "$rr_fname"
+
+    (
+    rr_fname="/tmp/rust_run_$$.bin"
+    rustc "$@" -o "$rr_fname" || return
+    eval "$rr_fname"
+    rm -f "$rr_fname"
+    )
 }
 
 cn() {
@@ -127,10 +130,10 @@ f() {
 	if ! [ -t 0 ]; then
 		file -
 	elif [ -z "$1" ]; then
-		find
+		find .
 	else
 		for f_local_i in "$@"; do
-			if [ "${f_local_i:0:1}" = '-' ]; then
+            if [ "$(echo "$f_local_i" | cut -c1-1)" = '-' ]; then
 				f_expect_find=y
 				break
 			fi
@@ -199,9 +202,9 @@ ag() {
     [ -z "$ag_pattern" ] && return
     shift
     if [ -z "$*" ]; then
-        find -type f -exec grep -P -H "$ag_pattern" '{}' \;
+        find . -type f -exec grep -P -H "$ag_pattern" '{}' \;
     else
-        find -type f -a \( "$@" \) -exec grep -P -H "$ag_pattern" '{}' \;
+        find . -type f -a \( "$@" \) -exec grep -P -H "$ag_pattern" '{}' \;
     fi
 }
 
