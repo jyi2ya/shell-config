@@ -30,7 +30,7 @@ alias grm='git rm'
 
 if command -v xclip >/dev/null; then
     gcl() {
-        if [ -z "$1" ]; then
+        if [ -n "$1" ]; then
             git clone "$@"
         else
             git clone "$(xclip -selection clipboard -o)"
