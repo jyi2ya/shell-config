@@ -65,8 +65,8 @@ cn() {
 	cargo new "$@"
 	for cn_opt in "$@"; do
 		if [ -d "$cn_opt" ]; then
-			cd "$cn_opt"
-			break
+			cd "$cn_opt" || return # make shellcheck happy
+			return
 		fi
 	done
 }
@@ -209,7 +209,7 @@ md()
 {
 	if [ -z "$2" ]; then
 		mkdir "$1" || return
-		cd "$1"
+		cd "$1" || return # make shellcheck happy
 	else
 		mkdir "$@"
 	fi
