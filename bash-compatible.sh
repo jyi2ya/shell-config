@@ -46,13 +46,13 @@ _prompt_slow_command_set_tracer()
 _prompt_slow_command()
 {
     local time_diff=$((SECONDS - CMD_START_TIME))
-    [ $time_diff -lt 10  ] && return
     if [ -n "$DISPLAY" ]; then
-        local active_window=$(xdotool getactivewindow)
-        if [ "$time_diff" -gt 30 ] && [ "$active_window" != "$CMD_ACTIVE_WINDOW" ]; then
+        local active_window=$(xdotool getactivewindow 2>/dev/null)
+        if [ -n "$CMD_ACTIVE_WINDOW" ] && [ "$active_window" != "$CMD_ACTIVE_WINDOW" ]; then
             notify-send DONE "$CMD_COMMAND"
         fi
     fi
+    [ $time_diff -lt 10  ] && return
     echo -n ">"
     date -u +%H:%M:%S --date="@$time_diff" | awk -F':' '{
     if ($1) printf("%dh ", $1);
