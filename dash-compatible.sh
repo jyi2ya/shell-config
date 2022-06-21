@@ -53,7 +53,7 @@ alias cu='cargo update'
 alias rc='rustc'
 
 rr() {
-	[ -z "$@" ] && return
+	[ -z "$1" ] && return
 
     (
     rr_fname="/tmp/rust_run_$$.bin"
@@ -64,7 +64,7 @@ rr() {
 }
 
 cn() {
-	[ -z "$@" ] && return
+	[ -z "$1" ] && return
 	cargo new "$@"
 	for cn_opt in "$@"; do
 		if [ -d "$cn_opt" ]; then
