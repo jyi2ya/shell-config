@@ -1,4 +1,4 @@
-echo "X$-" | grep -vq i && return
+[ -z "$(echo "X$-" | tr -dc i)" ] && return
 
 umask 077
 
