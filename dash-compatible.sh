@@ -19,7 +19,6 @@ alias gbc='git branch'
 alias gcm='git commit'
 alias gco='git checkout'
 alias gst='git status'
-alias gcl='git clone'
 alias glg='git log --graph'
 alias gmg='git merge'
 alias gdf='git diff'
@@ -29,6 +28,19 @@ alias gin='git init'
 alias gbl='git blame'
 alias grm='git rm'
 
+if command -v xclip >/dev/null; then
+    gcl() {
+        if [ -z "$1" ]; then
+            git clone "$@"
+        else
+            git clone "$(xclip -selection clipboard -o)"
+        fi
+    }
+else
+    alias gcl='git clone'
+fi
+
+
 # gcc
 alias cc='cc -std=c99 -Wall -Werror -Wshadow -g -fsanitize=address -O0 -pedantic'
 
@@ -36,6 +48,7 @@ alias cc='cc -std=c99 -Wall -Werror -Wshadow -g -fsanitize=address -O0 -pedantic
 alias cr='cargo run'
 alias cb='cargo build --release'
 alias ci='cargo init'
+alias cl='cargo rustc -- --emit=llvm-ir'
 alias cu='cargo update'
 alias rc='rustc'
 
@@ -170,15 +183,16 @@ alias bc='bc -lq'
 alias cow='curseofwar -W18 -H20'
 alias cpv='rsync -ah --info=progress2'
 alias cr='cargo run'
+alias ct='column -t'
 alias gb='iconv -fgb18030 -tutf8'
 alias mkd='mkdir'
 alias nms='nms -cs -f white'
 alias nsend='nc -l -p 6737 -q 1'
 alias rl='exec dash'
+alias root='sudo su -'
 alias sck='shellcheck -Cauto -s sh'
 alias vdf='vimdiff'
 alias wl='wc -l'
-alias root='sudo su -'
 
 ag() {
     ag_pattern="$1"
@@ -220,6 +234,8 @@ alias sl='ls'
 alias iv='vi'
 alias josb='jobs'
 alias lr='rl'
+alias dm='md'
+alias ig='gi'
 
 EDITOR="vim"
 PATH="$HOME/bin:$HOME/.local/bin:$PATH"
