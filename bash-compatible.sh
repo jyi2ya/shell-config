@@ -14,6 +14,14 @@ HISTTIMEFORMAT="%F %T "
 HISTCONTROL=ignoredups
 INPUTRC=/etc/inputrc
 
+private() {
+    history -a
+    export HISTFILE=/dev/null
+    export HISTSIZE=10000
+    export HISTFILESIZE=0
+    export PROMPT_COMMAND='_prompt_smart_ls;  _prompt_slow_command_set_tracer'
+}
+
 LAST_LS=$(command ls | sum)
 LAST_PWD="$PWD"
 _prompt_smart_ls()
@@ -31,7 +39,6 @@ _prompt_smart_ls()
 _prompt_slow_command_tracer_init()
 {
     CMD_START_TIME="$SECONDS"
-    CMD_COMMAND="$BASH_COMMAND"
     if [ -n "$DISPLAY" ]; then
         CMD_ACTIVE_WINDOW=$(xdotool getactivewindow)
     fi
@@ -49,7 +56,7 @@ _prompt_slow_command()
     if [ -n "$DISPLAY" ]; then
         local active_window=$(xdotool getactivewindow 2>/dev/null)
         if [ -n "$CMD_ACTIVE_WINDOW" ] && [ "$active_window" != "$CMD_ACTIVE_WINDOW" ]; then
-            notify-send DONE "$CMD_COMMAND"
+            notify-send DONE "$(fc -nl 0 | sed 's/^[[:space:]]*//')"
         fi
     fi
     [ $time_diff -lt 10  ] && return
@@ -63,7 +70,11 @@ _prompt_slow_command()
     return
 }
 
-PROMPT_COMMAND='_prompt_smart_ls; (_z --add "$(command pwd -P 2>/dev/null)" 2>/dev/null &); _prompt_slow_command_set_tracer'
+_prompt_append_history() {
+    history -a
+}
+
+PROMPT_COMMAND='_prompt_smart_ls; (_z --add "$(command pwd -P 2>/dev/null)" 2>/dev/null &); _prompt_append_history; _prompt_slow_command_set_tracer'
 _Z_NO_PROMPT_COMMAND=true
 
 PS1='$(_prompt_return_value)$(_prompt_slow_command)\A \H$(__git_ps1) $(_prompt_fish_path)\n\j '
