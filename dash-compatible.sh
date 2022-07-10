@@ -77,7 +77,7 @@ cn() {
 # apt
 alias apt='sudo apt'
 alias sa='apt'
-alias au='sudo apt update && sudo apt upgrade && sudo apt full-upgrade && sudo apt-file update'
+alias au='sudo apt update && sudo apt upgrade && sudo apt full-upgrade && sudo apt-file update && apt autoremove'
 alias ai='sudo apt install'
 alias ali='apt list --installed'
 alias al='apt list'
@@ -127,6 +127,7 @@ alias d='sudo docker'
 alias e='unar'
 
 f() {
+    unset f_expect_find
 	if ! [ -t 0 ]; then
 		file -
 	elif [ -z "$1" ]; then
@@ -134,7 +135,7 @@ f() {
 	else
 		for f_local_i in "$@"; do
             if [ "$(echo "$f_local_i" | cut -c1-1)" = '-' ]; then
-				f_expect_find=y
+                f_expect_find=y
 				break
 			fi
 		done
@@ -162,7 +163,11 @@ m() {
 	fi
 }
 
-alias o='xdg-open'
+o() {
+    for o_i in "$@"; do
+        xdg-open "$o_i"
+    done
+}
 
 p() {
 	if [ -z "$1" ] && [ -t 0 ]; then
@@ -177,6 +182,15 @@ alias s='sort'
 alias t='task'
 alias u='au'
 alias v='vi'
+
+w() {
+	if [ -z "$1" ]; then
+        command w
+	else
+        which "$@"
+	fi
+}
+
 alias x='xargs '
 
 # Tools
@@ -196,6 +210,22 @@ alias root='sudo su -'
 alias sck='shellcheck -Cauto -s sh'
 alias vdf='vimdiff'
 alias wl='wc -l'
+
+saveshot() {
+    saveshot_cnt=0
+    while [ -f "$(printf '%03d' $saveshot_cnt).png"  ]; do
+	    saveshot_cnt=$((saveshot_cnt + 1))
+    done
+    xclip -selection clipboard -t image/png -o > "$(printf '%03d' $saveshot_cnt).png"
+}
+
+vw() {
+    vi "$(which "$@")"
+}
+
+fw() {
+    file "$(which "$@")"
+}
 
 ag() {
     ag_pattern="$1"
@@ -228,6 +258,12 @@ fk() {
     fi
 }
 
+oe() {
+    [ -z "$1" ] && return 1
+    nohup xdg-open "$@" >/dev/null 2>&1 &
+    exit
+}
+
 # Vim
 alias vi='vim'
 
@@ -239,6 +275,9 @@ alias josb='jobs'
 alias lr='rl'
 alias dm='md'
 alias ig='gi'
+alias oo='o'
+alias ooo='o'
+alias cla='cal'
 
 EDITOR="vim"
 PATH="$HOME/bin:$HOME/.local/bin:$PATH"
