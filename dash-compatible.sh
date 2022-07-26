@@ -46,6 +46,8 @@ alias cc='cc -std=c99 -Wall -Werror -Wshadow -g -fsanitize=address -O0 -pedantic
 
 # rust
 alias cr='cargo run'
+alias crr='cargo run --release'
+alias co='cargo doc --open'
 alias cb='cargo build --release'
 alias ci='cargo init'
 alias cl='cargo rustc -- --emit=llvm-ir'
@@ -81,7 +83,7 @@ alias au='sudo apt update && sudo apt upgrade && sudo apt full-upgrade && sudo a
 alias ai='sudo apt install'
 alias ali='apt list --installed'
 alias al='apt list'
-alias af='apt-file find'
+alias af='apt-file -x find'
 alias ap='apt purge'
 alias aar='apt autoremove'
 
@@ -284,3 +286,5 @@ PATH="$HOME/bin:$HOME/.local/bin:$PATH"
 export PATH EDITOR
 
 PS1='$ '
+
+export WINEDEBUG=-all
