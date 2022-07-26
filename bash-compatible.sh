@@ -56,7 +56,7 @@ _prompt_slow_command()
     if [ -n "$DISPLAY" ]; then
         local active_window=$(xdotool getactivewindow 2>/dev/null)
         if [ -n "$CMD_ACTIVE_WINDOW" ] && [ "$active_window" != "$CMD_ACTIVE_WINDOW" ]; then
-            notify-send DONE "$(fc -nl 0 | sed 's/^[[:space:]]*//')"
+            notify-send "DONE $(date -u +%H:%M:%S --date="@$time_diff")" "$(fc -nl 0 | sed 's/^[[:space:]]*//')"
         fi
     fi
     [ $time_diff -lt 10  ] && return
