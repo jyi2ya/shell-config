@@ -1,3 +1,5 @@
+#!/bin/sh
+
 if [ -r /proc/version ] && grep -q microsoft /proc/version; then
 	alias xdg-open='explorer.exe'
 	alias n='notepad.exe'
@@ -9,9 +11,18 @@ mkdir -p ~/.local/share/vim/swap/
 mkdir -p ~/.local/share/vim/undo/
 
 if command -v perl > /dev/null; then
-    eval "$(perl -Mlocal::lib="$HOME"/.local)"
+    mkdir -p ~/.local/bin
+    PATH="$HOME/.local/bin${PATH:+:${PATH}}"
+    PERL5LIB="$HOME/.local/lib/perl5${PERL5LIB:+:${PERL5LIB}}"
+    PERL_LOCAL_LIB_ROOT="$HOME/.local${PERL_LOCAL_LIB_ROOT:+:${PERL_LOCAL_LIB_ROOT}}"
+    PERL_MB_OPT="--install_base \"$HOME/.local\""
+    PERL_MM_OPT="INSTALL_BASE=$HOME/.local"
+    export PERL5LIB PERL_LOCAL_LIB_ROOT PERL_MB_OPT PERL_MM_OPT PATH
 fi
 
-if [ -f "$HOME/.cargo/env" ]; then
+if [ -r "$HOME/.cargo/env" ]; then
     . "$HOME/.cargo/env"
 fi
+
+export WINEDEBUG=-all
+export GOPATH="$HOME/.cargo/target"

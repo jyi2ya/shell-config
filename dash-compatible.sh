@@ -1,6 +1,11 @@
-[ -z "$(echo "X$-" | tr -dc i)" ] && return
+#!/bin/sh
 
-umask 077
+case $- in
+    *i*) ;;
+      *) return;;
+esac
+
+umask 022
 
 # safety
 alias mv='mv -i'
@@ -42,7 +47,7 @@ fi
 
 
 # gcc
-alias cc='cc -std=c99 -Wall -Werror -Wshadow -g -fsanitize=address -O0 -pedantic'
+alias cc='cc -std=c11 -Wall -Werror -Wshadow -Og -g -fsanitize=address -pedantic'
 
 # rust
 alias cr='cargo run'
@@ -55,7 +60,7 @@ alias cu='cargo update'
 alias rc='rustc'
 
 rr() {
-	[ -z "$1" ] && return
+	[ $# = 0 ] && return
 
     (
     rr_fname="/tmp/rust_run_$$.bin"
@@ -66,7 +71,7 @@ rr() {
 }
 
 cn() {
-	[ -z "$1" ] && return
+	[ $# = 0 ] && return
 	cargo new "$@"
 	for cn_opt in "$@"; do
 		if [ -d "$cn_opt" ]; then
@@ -88,7 +93,6 @@ alias ap='apt purge'
 alias aar='apt autoremove'
 
 # docker
-alias docker='sudo docker'
 alias dr='docker run'
 alias dps='docker ps'
 alias sd='sudo docker'
@@ -97,8 +101,9 @@ alias dl='docker load'
 alias di='docker image'
 alias dc='docker container'
 
-# sudos
+# poweroff & reboot
 alias reboot='sudo reboot'
+alias rbt='reboot'
 alias poweroff='sudo poweroff'
 
 # ls
@@ -108,11 +113,11 @@ alias lt='ls -hsS1'
 alias ls='ls -F'
 
 # grep
-alias xg='xargs grep'
+alias xg='xargs -0 grep'
 alias gv='grep -v'
 alias gi='grep -i'
 alias giv='grep -vi'
-alias eg='egrep'
+alias ge='egrep'
 
 # Single-char aliases
 alias a='ls -A'
@@ -125,40 +130,52 @@ c() {
 	fi
 }
 
-alias d='sudo docker'
+alias d='docker'
 alias e='unar'
 
 f() {
-    unset f_expect_find
-	if ! [ -t 0 ]; then
+	if [ -t 0 ]; then
+        if [ $# -eq 0 ]; then
+            find .
+        elif [ $# -eq 1 ] && [ -d "$1" ]; then
+            find "$@"
+        else
+            f_want_find=n
+            for f_local_i in "$@"; do
+                if [ "${f_local_i%"${f_local_i#?}"}" != '-' ] && ! [ -e "$f_local_i" ] && ! [ -h "$f_local_i" ]; then
+                    f_want_find=y
+                    break
+                fi
+            done
+            if [ "$f_want_find" = y ]; then
+                find "$@"
+            else
+                file "$@"
+            fi
+        fi
+    else
 		file -
-	elif [ -z "$1" ]; then
-		find .
-	else
-		for f_local_i in "$@"; do
-            if [ "$(echo "$f_local_i" | cut -c1-1)" = '-' ]; then
-                f_expect_find=y
-				break
-			fi
-		done
-		if [ -n "$f_expect_find" ]; then
-			find "$@"
-		else
-			file "$@"
-		fi
-	fi
+    fi
 }
 
 alias g='grep'
 alias h='head'
 alias i='sudo apt install'
-alias j='jobs -l'
+
+j() {
+    if [ $# = 0 ]; then
+        jobs -l
+    else
+        jrnl "$@"
+    fi
+}
+
 alias l='ls'
 
 m() {
-	if [ -z "$1" ]; then
+	if [ $# = 0 ]; then
 		echo too few arguments
-	elif [ -z "$2" ]; then
+	elif [ $# = 1 ]; then
 		mv "$1" .
 	else
 		mv "$@"
@@ -167,29 +184,57 @@ m() {
 
 o() {
     for o_i in "$@"; do
-        xdg-open "$o_i"
+        xdg-open "$o_i" &
     done
 }
 
 p() {
-	if [ -z "$1" ] && [ -t 0 ]; then
-		pwd
+	if [ -t 0 ]; then
+        if [ $# = 0 ]; then
+            pueue status
+        elif [ -r "$1" ]; then
+            less -F "$@"
+        else
+            pueue "$@"
+        fi
 	else
 		less -F "$@"
 	fi
 }
 
 alias r='rm'
-alias s='sort'
-alias t='task'
-alias u='au'
+
+s() {
+    if [ -t 0 ]; then
+        ssh "$@"
+    else
+        sort "$@"
+    fi
+}
+
+t() {
+    if [ -t 0 ]; then
+        task "$@"
+    else
+        tail "$@"
+    fi
+}
+
+u() {
+    if [ -t 0 ]; then
+        au "$@"
+    else
+        uniq "$@"
+    fi
+}
+
 alias v='vi'
 
 w() {
-	if [ -z "$1" ]; then
+	if [ $# = 0 ]; then
         command w
 	else
-        which "$@"
+        command -v "$@"
 	fi
 }
 
@@ -199,27 +244,28 @@ alias x='xargs '
 alias ....='cd ../../../'
 alias ...='cd ../..'
 alias bc='bc -lq'
+alias chomp='tr -d "\n"'
+alias cls='clear'
 alias cow='curseofwar -W18 -H20'
 alias cpv='rsync -ah --info=progress2'
 alias cr='cargo run'
 alias ct='column -t'
+alias fmt='fmt -s'
 alias gb='iconv -fgb18030 -tutf8'
+alias ipa='ip a'
+alias jt='jrnl @tech'
 alias mkd='mkdir'
 alias nms='nms -cs -f white'
-alias nsend='nc -l -p 6737 -q 1'
+alias nsend='nc -Nnvlp 6737 -q 1'
+alias pad='pueue add '
 alias rl='exec dash'
 alias root='sudo su -'
 alias sck='shellcheck -Cauto -s sh'
+alias sr='sort -R'
+alias tf='tail -f'
 alias vdf='vimdiff'
+alias wk='genact -m cc'
 alias wl='wc -l'
-
-saveshot() {
-    saveshot_cnt=0
-    while [ -f "$(printf '%03d' $saveshot_cnt).png"  ]; do
-	    saveshot_cnt=$((saveshot_cnt + 1))
-    done
-    xclip -selection clipboard -t image/png -o > "$(printf '%03d' $saveshot_cnt).png"
-}
 
 vw() {
     vi "$(which "$@")"
@@ -267,7 +313,16 @@ oe() {
 }
 
 # Vim
-alias vi='vim'
+if command -v vim >/dev/null; then
+    EDITOR="vim"
+    alias vi='vim'
+fi
+
+if command -v vi >/dev/null; then
+    EDITOR="vi"
+fi
+
+export EDITOR
 
 # Fix typo
 alias lw='wl'
@@ -281,10 +336,15 @@ alias oo='o'
 alias ooo='o'
 alias cla='cal'
 
-EDITOR="vim"
-PATH="$HOME/bin:$HOME/.local/bin:$PATH"
-export PATH EDITOR
+for path in "$HOME/.bin" "$HOME/.local/bin" "$HOME/bin"; do
+    PATH="$path${PATH:+":"}$PATH"
+done
 
-PS1='$ '
+export PATH
 
-export WINEDEBUG=-all
+PS1="$USER@$(uname -n)"
+if [ "$(id -u)" = 0 ]; then
+    PS1="$PS1 # "
+else
+    PS1="$PS1 \$ "
+fi

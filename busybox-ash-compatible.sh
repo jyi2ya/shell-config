@@ -1,4 +1,6 @@
-alias rl='exec ash'
+#!/bin/sh
+
+alias rl='exec busybox ash'
 
 HISTFILE="$HOME/.ash_history"
 HISTFILESIZE=999999999
@@ -15,13 +17,6 @@ _prompt_smart_ls()
         printf "@"
         return
 	fi
-}
-
-_prompt_return_value()
-{
-    prompt_return_value=$?
-	test $prompt_return_value -ne 0 && printf '[%s] ' $prompt_return_value
-	return $prompt_return_value
 }
 
 _prompt_fish_path()
