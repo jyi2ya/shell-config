@@ -188,12 +188,18 @@ p() {
         if [ $# = 0 ]; then
             pueue status
         elif [ -r "$1" ]; then
-            less -F "$@"
+            less "$@"
+        else
+            pueue "$@"
+        fi
+	else
+        if [ $# = 0 ]; then
+            less "$@"
+        elif [ $# = 1 ] && [ "$1" = '-R' ]; then
+            less "$@"
         else
             parallel "$@"
         fi
-	else
-		less -F "$@"
 	fi
 }
 
