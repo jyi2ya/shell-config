@@ -25,4 +25,4 @@ if [ -r "$HOME/.cargo/env" ]; then
 fi
 
 export WINEDEBUG=-all
-export GOPATH="$HOME/.cargo/target"
+export GOPATH="$HOME/.cargo"
