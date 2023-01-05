@@ -1,3 +1,5 @@
+#!/bin/bash
+
 alias -- -='cd -'
 alias rl='exec bash'
 
@@ -14,6 +16,19 @@ HISTFILE="$HOME/.bash_history"
 HISTTIMEFORMAT="%F %T "
 HISTCONTROL=ignoredups
 INPUTRC=/etc/inputrc
+
+export PAGER="less"
+export LESS="-R -i -g -c -W"
+export LESSOPEN='|/usr/bin/lesspipe %s'
+export LESSCLOSE='/usr/bin/lesspipe %s %s'
+# color man
+export LESS_TERMCAP_mb=$'\E[01;31m'
+export LESS_TERMCAP_md=$'\E[01;31m'
+export LESS_TERMCAP_me=$'\E[0m'
+export LESS_TERMCAP_se=$'\E[0m'
+export LESS_TERMCAP_so=$'\E[01;44;33m'
+export LESS_TERMCAP_ue=$'\E[0m'
+export LESS_TERMCAP_us=$'\E[01;32m'
 
 LAST_LS=$(command ls | sum)
 LAST_PWD="$PWD"
