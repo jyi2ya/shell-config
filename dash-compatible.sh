@@ -183,7 +183,7 @@ m() {
 
 alias o='xdg-open'
 
-p() {
+p_func() {
 	if [ -t 0 ]; then
         if [ $# = 0 ]; then
             pueue status
@@ -202,6 +202,8 @@ p() {
         fi
 	fi
 }
+
+alias p='p_func '
 
 alias r='rm'
 
