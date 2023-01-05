@@ -8,7 +8,8 @@ shopt -s dotglob
 shopt -s globstar
 shopt -s histappend
 
-HISTSIZE=999999999
+HISTSIZE="-1"
+HISTFILESIZE="-1"
 HISTFILE="$HOME/.bash_history"
 HISTTIMEFORMAT="%F %T "
 HISTCONTROL=ignoredups
