@@ -182,11 +182,7 @@ m() {
 	fi
 }
 
-o() {
-    for o_i in "$@"; do
-        xdg-open "$o_i" &
-    done
-}
+alias o='xdg-open'
 
 p() {
 	if [ -t 0 ]; then
@@ -266,6 +262,7 @@ alias tf='tail -f'
 alias vdf='vimdiff'
 alias wk='genact -m cc'
 alias wl='wc -l'
+alias gl='glow -s light -p'
 
 vw() {
     vi "$(which "$@")"
