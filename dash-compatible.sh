@@ -1,10 +1,5 @@
 #!/bin/sh
 
-case $- in
-    *i*) ;;
-      *) return;;
-esac
-
 umask 022
 
 # safety
