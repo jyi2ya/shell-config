@@ -40,6 +40,10 @@ else
     alias gcl='git clone'
 fi
 
+if command -v mosh >/dev/null; then
+    alias ssh=mosh
+fi
+
 
 # gcc
 alias cc='cc -std=c11 -Wall -Werror -Wshadow -Og -g -fsanitize=address -pedantic'
@@ -186,7 +190,7 @@ p() {
         elif [ -r "$1" ]; then
             less -F "$@"
         else
-            pueue "$@"
+            parallel "$@"
         fi
 	else
 		less -F "$@"
@@ -258,6 +262,7 @@ alias vdf='vimdiff'
 alias wk='genact -m cc'
 alias wl='wc -l'
 alias gl='glow -s light -p'
+alias pp='parallel --pipe -k '
 
 vw() {
     vi "$(which "$@")"
