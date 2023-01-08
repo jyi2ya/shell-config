@@ -169,6 +169,7 @@ j() {
     fi
 }
 
+alias k='pkill'
 alias l='ls'
 
 m() {
@@ -242,6 +243,7 @@ w() {
 }
 
 alias x='xargs '
+alias y='yes'
 
 # Tools
 alias ....='cd ../../../'

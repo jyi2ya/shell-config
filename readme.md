@@ -38,7 +38,7 @@ See `dash-compatible.sh`.
 | h  | `head` |
 | i  | `apt install` |
 | j  | `jobs` and `jrnl` |
-| k  | undef, maybe `kubectl`? |
+| k  | `pkill` |
 | l  | `ls` |
 | m  | `mv` |
 | n  | undef |
@@ -52,5 +52,5 @@ See `dash-compatible.sh`.
 | v  | `vi` |
 | w  | `w` and `which` |
 | x  | `xargs` |
-| y  | undef |
+| y  | `yes` |
 | z  | `z.sh` |
