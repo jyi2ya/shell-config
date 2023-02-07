@@ -40,11 +40,6 @@ else
     alias gcl='git clone'
 fi
 
-if command -v mosh >/dev/null; then
-    alias ssh=mosh
-fi
-
-
 # gcc
 alias cc='cc -std=c11 -Wall -Werror -Wshadow -Og -g -fsanitize=address -pedantic'
 
@@ -157,7 +152,14 @@ f() {
     fi
 }
 
-alias g='grep'
+g() {
+    if [ $# = 0 ]; then
+        git status
+    else
+        grep "$@"
+    fi
+}
+
 alias h='head'
 alias i='sudo apt install'
 
@@ -170,14 +172,31 @@ j() {
 }
 
 alias k='pkill'
-alias l='ls'
+
+l() {
+    if [ -t 0 ]; then
+        if [ -t 1 ]; then
+            if [ $# = 0 ]; then
+                command ls -F
+            else
+                command ls -Flh "$@"
+            fi
+        else
+            command ls -d1 "$@"
+        fi
+    else
+        wc -l "$@"
+    fi
+}
 
 m() {
 	if [ $# = 0 ]; then
-		echo too few arguments
-	elif [ $# = 1 ]; then
+        make
+	elif [ $# = 1 ] && [ -f "$1" ]; then
 		mv "$1" .
-	else
+    elif [ $# = 1 ]; then
+        man "$1"
+    else
 		mv "$@"
 	fi
 }
@@ -235,11 +254,15 @@ u() {
 alias v='vi'
 
 w() {
-	if [ $# = 0 ]; then
-        command w
-	else
-        command -v "$@"
-	fi
+    if [ -t 0 ]; then
+        if [ $# = 0 ]; then
+            command w
+        else
+            command -v "$@"
+        fi
+    else
+        wc "$@"
+    fi
 }
 
 alias x='xargs '
@@ -270,9 +293,13 @@ alias sr='sort -R'
 alias tf='tail -f'
 alias vdf='vimdiff'
 alias wk='genact -m cc'
-alias wl='wc -l'
 alias gl='glow -s light -p'
+alias wl='wc -l'
 alias pp='parallel --pipe -k '
+
+idle() {
+    renice -n 19 -p $$
+}
 
 vw() {
     vi "$(which "$@")"
