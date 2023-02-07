@@ -95,8 +95,6 @@ preexec_functions+=(_prompt_slow_command_tracer_init)
 precmd_functions+=(_prompt_smart_ls)
 precmd_functions+=(_prompt_set_return_value)
 
-PS1='$(_prompt_show_return_value)$(_prompt_slow_command)\A \H$(__git_ps1) $(_prompt_fish_path)\n\j '
-
 if [ -f /etc/bash_completion ]; then
     # shellcheck source=/dev/null
     source /etc/bash_completion
@@ -105,4 +103,10 @@ fi
 if [ -f /usr/share/git-core/contrib/completion/git-prompt.sh ]; then
     # shellcheck source=/dev/null
 	source /usr/share/git-core/contrib/completion/git-prompt.sh
+fi
+
+if command -v __git_ps1 > /dev/null; then
+    PS1='$(_prompt_show_return_value)$(_prompt_slow_command)\A \H$(__git_ps1) $(_prompt_fish_path)\n\j '
+else
+    PS1='$(_prompt_show_return_value)$(_prompt_slow_command)\A \H $(_prompt_fish_path)\n\j '
 fi
