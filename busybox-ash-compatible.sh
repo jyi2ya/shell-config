@@ -7,6 +7,13 @@ HISTFILESIZE=999999999
 
 LAST_LS=$(command ls -xw 80 | sum)
 LAST_PWD="$PWD"
+
+_prompt_show_return_value()
+{
+    prompt_return_value=$?
+	test $prompt_return_value -ne 0 && printf '[%s] ' $prompt_return_value
+}
+
 _prompt_smart_ls()
 {
 	smart_ls_this_ls=$(command ls -xw 80 | sum)
@@ -51,4 +58,4 @@ _prompt_fish_path()
 }'
 }
 
-PS1='$(_prompt_smart_ls)$(_prompt_return_value)\A \H $(_prompt_fish_path)\n\$ '
+PS1='$(_prompt_smart_ls)$(_prompt_show_return_value)\A \H $(_prompt_fish_path)\n\$ '
