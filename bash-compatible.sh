@@ -18,7 +18,7 @@ HISTCONTROL=ignoredups
 INPUTRC=/etc/inputrc
 
 export PAGER="less"
-export LESS="-R -i -g -c -W"
+export LESS="-R -i -g -W"
 export LESSOPEN='|/usr/bin/lesspipe %s'
 export LESSCLOSE='/usr/bin/lesspipe %s %s'
 # color man
@@ -48,7 +48,7 @@ _prompt_slow_command_tracer_init()
 {
     CMD_START_TIME="$SECONDS"
     if [ -n "$DISPLAY" ]; then
-        CMD_ACTIVE_WINDOW=$(xdotool getactivewindow)
+        CMD_ACTIVE_WINDOW=$(xdotool getactivewindow 2>/dev/null)
     fi
 }
 
