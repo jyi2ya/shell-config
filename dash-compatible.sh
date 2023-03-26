@@ -171,7 +171,7 @@ j() {
     fi
 }
 
-alias k='pkill'
+alias k='kubectl'
 
 l() {
     if [ -t 0 ]; then
@@ -182,7 +182,11 @@ l() {
                 command ls -Flh "$@"
             fi
         else
-            command ls -d1 "$@"
+            if [ $# = 0 ]; then
+                command ls -1
+            else
+                command ls -d1 "$@"
+            fi
         fi
     else
         wc -l "$@"
