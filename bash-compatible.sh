@@ -106,7 +106,7 @@ if [ -f /usr/share/git-core/contrib/completion/git-prompt.sh ]; then
 fi
 
 if command -v __git_ps1 > /dev/null; then
-    PS1='$(_prompt_show_return_value)$(_prompt_slow_command)\A \H$(__git_ps1) $(_prompt_fish_path)\n\j '
+    PS1='$(_prompt_show_return_value)$(_prompt_slow_command)\H \A$(__git_ps1) $(_prompt_fish_path)\n\j '
 else
-    PS1='$(_prompt_show_return_value)$(_prompt_slow_command)\A \H $(_prompt_fish_path)\n\j '
+    PS1='$(_prompt_show_return_value)$(_prompt_slow_command)\H \A $(_prompt_fish_path)\n\j '
 fi

@@ -58,4 +58,4 @@ _prompt_fish_path()
 }'
 }
 
-PS1='$(_prompt_smart_ls)$(_prompt_show_return_value)\A \H $(_prompt_fish_path)\n\$ '
+PS1='$(_prompt_smart_ls)$(_prompt_show_return_value)\H \A $(_prompt_fish_path)\n\$ '
