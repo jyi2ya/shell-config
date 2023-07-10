@@ -28,34 +28,36 @@ _prompt_smart_ls()
 
 _prompt_fish_path()
 {
-    awk 'BEGIN {
+    awk '
+BEGIN {
     pwd = ENVIRON["PWD"];
     home = ENVIRON["HOME"];
-    split(pwd, pwd_items, "/");
-    split(home, home_items, "/");
+    pwd_items_len = split(pwd, pwd_items, "/");
+    home_items_len = split(home, home_items, "/");
 
     i = 1;
-    while (i <= length(home_items) && pwd_items[i] == home_items[i])
+    while (i <= home_items_len && pwd_items[i] == home_items[i])
         ++i;
 
-    if (i > length(home_items)) {
+    if (i > home_items_len) {
         printf("~");
     } else {
         i = 2;
     }
 
-    while (i <= length(pwd_items) - 2) {
+    while (i <= pwd_items_len - 2) {
         printf("/%s", substr(pwd_items[i], 1, 2));
         ++i;
     }
 
-    while (i <= length(pwd_items)) {
+    while (i <= pwd_items_len) {
         printf("/%s", pwd_items[i]);
         ++i;
     }
 
     exit(0);
-}'
+}
+'
 }
 
 PS1='$(_prompt_smart_ls)$(_prompt_show_return_value)\H \A $(_prompt_fish_path)\n\$ '
