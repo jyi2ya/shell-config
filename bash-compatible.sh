@@ -93,6 +93,7 @@ _prompt_append_history() {
 
 preexec_functions+=(_prompt_slow_command_tracer_init)
 precmd_functions+=(_prompt_smart_ls)
+precmd_functions+=(_prompt_append_history)
 precmd_functions+=(_prompt_set_return_value)
 
 if [ -f /etc/bash_completion ]; then
