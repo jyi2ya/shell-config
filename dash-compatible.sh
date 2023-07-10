@@ -167,7 +167,7 @@ j() {
     if [ $# = 0 ]; then
         jobs -l
     else
-        jrnl "$@"
+        diary-add "$@"
     fi
 }
 
@@ -300,8 +300,12 @@ alias wk='genact -m cc'
 alias gl='glow -s light -p'
 alias wl='wc -l'
 alias pp='parallel --pipe -k '
+alias pr='parallel'
+alias tsi='ts -i "%H:%M:%.S"'
+alias mj='make -j$(nproc)'
 
 idle() {
+    chrt -i -p $$
     renice -n 19 -p $$
 }
 
@@ -351,13 +355,13 @@ oe() {
 }
 
 # Vim
+if command -v vi >/dev/null; then
+    EDITOR="vi"
+fi
+
 if command -v vim >/dev/null; then
     EDITOR="vim"
     alias vi='vim'
-fi
-
-if command -v vi >/dev/null; then
-    EDITOR="vi"
 fi
 
 export EDITOR
@@ -386,3 +390,9 @@ if [ "$(id -u)" = 0 ]; then
 else
     PS1="$PS1 \$ "
 fi
+
+mkdir -p ~/.cargo/sccache
+export RUSTC_WRAPPER="sccache"
+export SCCACHE_DIR="$HOME/.cargo/sccache"
+export SCCACHE_MAX_FRAME_LENGTH="104857600"
+export SCCACHE_CACHE_SIZE="64G"
