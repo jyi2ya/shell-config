@@ -17,6 +17,14 @@ HISTTIMEFORMAT="%F %T "
 HISTCONTROL=ignoredups
 INPUTRC=/etc/inputrc
 
+save_history() {
+    history -a
+    hisotry -c
+    history -r
+}
+
+trap save_history EXIT
+
 export PAGER="less"
 export LESS="-R -i -g -W"
 export LESSOPEN='|/usr/bin/lesspipe %s'
@@ -92,8 +100,8 @@ _prompt_append_history() {
 }
 
 preexec_functions+=(_prompt_slow_command_tracer_init)
+preexec_functions+=(_prompt_append_history)
 precmd_functions+=(_prompt_smart_ls)
-precmd_functions+=(_prompt_append_history)
 precmd_functions+=(_prompt_set_return_value)
 
 if [ -f /etc/bash_completion ]; then
