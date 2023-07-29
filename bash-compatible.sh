@@ -19,7 +19,7 @@ INPUTRC=/etc/inputrc
 
 save_history() {
     history -a
-    hisotry -c
+    history -c
     history -r
 }
 
