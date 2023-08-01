@@ -38,18 +38,23 @@ export LESS_TERMCAP_so=$'\E[01;44;33m'
 export LESS_TERMCAP_ue=$'\E[0m'
 export LESS_TERMCAP_us=$'\E[01;32m'
 
-LAST_LS=$(command ls | sum)
+LAST_DIR_CHANGE=$(stat -c %Z .)
 LAST_PWD="$PWD"
 _prompt_smart_ls()
 {
-	local this_ls
-	this_ls=$(command ls | sum)
-	if [ "$LAST_LS" != "$this_ls" ] || [ "$LAST_PWD" != "$PWD" ]; then
-		LAST_LS="$this_ls"
-		LAST_PWD="$PWD"
-		ls
-		return
-	fi
+    local this_dir_change this_pwd this_ls
+    this_pwd=$PWD
+    if [ "$this_pwd" == "$LAST_PWD" ]; then
+        this_dir_change=$(stat -c %Z .)
+        if [ "$this_dir_change" == "$LAST_DIR_CHANGE" ]; then
+            return
+        fi
+    fi
+
+    LAST_PWD=$this_pwd
+    LAST_DIR_CHANGE=$this_dir_change
+    ls
+    return
 }
 
 _prompt_slow_command_tracer_init()
