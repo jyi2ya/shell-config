@@ -51,8 +51,8 @@ _prompt_smart_ls()
         fi
     fi
 
-    LAST_PWD=$this_pwd
-    LAST_DIR_CHANGE=$this_dir_change
+    LAST_PWD=$PWD
+    LAST_DIR_CHANGE=$(stat -c %Z .)
     ls
     return
 }
