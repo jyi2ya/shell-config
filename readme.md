@@ -1,3 +1,5 @@
+see <https://github.com/jyi2ya/dotfiles>
+
 my shell config for ``dash`` ``ash`` and ``bash``.
 
 ## Build
